@@ -7,10 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import Camera from "./Camera.js";
 import World from "./World.js";
 export default class Game {
     constructor(ctx) {
-        this.SCALE = 3;
+        this.WIDTH = document.getElementById("game-canvas").clientWidth;
+        this.HEIGHT = document.getElementById("game-canvas").clientHeight;
         this.world = new World();
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
@@ -20,8 +22,8 @@ export default class Game {
      */
     start() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.world.init();
-            // console.log(this.world.getTileID(0, 30, 30));
+            yield this.world.init(); // loading world
+            console.log(World.WORLD_SIZE * this.world.tilesize);
             this.run();
         });
     }
@@ -38,16 +40,26 @@ export default class Game {
         requestAnimationFrame(this.run.bind(this));
     }
     update(deltaTime) {
+        Camera.x += 1.5;
+        Camera.y += 0.5;
+        let worldSize = World.WORLD_SIZE * this.world.tilesize;
+        // Camera clamping
+        Camera.y = Math.max(Camera.y, 0);
+        Camera.x = Math.max(Camera.x, 0);
+        Camera.x = Math.min(Camera.x, worldSize - this.WIDTH * 0.5);
+        Camera.y = Math.min(Camera.y, worldSize - this.HEIGHT * 0.5);
     }
     render(ctx) {
         // this.tempSpriteSheet.renderSpriteById(ctx, 884, 0, 0);
-        this.world.drawLayer(ctx, 0);
-        this.world.drawLayer(ctx, 1);
-        this.world.drawLayer(ctx, 2);
-        this.world.drawLayer(ctx, 3);
-        this.world.drawLayer(ctx, 4);
+        this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+        for (let l = 0; l <= 4; l++) {
+            this.world.drawLayer(ctx, l, -Camera.x, -Camera.y);
+        }
         // TODO: render the player
-        this.world.drawLayer(ctx, 5);
+        this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
+        this.ctx.fillStyle = "red";
+        this.ctx.font = "48px sans";
+        this.ctx.fillText(`${Camera.x}`, 40, 40);
     }
 }
 //# sourceMappingURL=Game.js.map

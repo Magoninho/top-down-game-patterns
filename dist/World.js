@@ -11,32 +11,35 @@ import ImageUtils from "./ImageUtils.js";
 import SpriteSheet from "./SpriteSheet.js";
 export default class World {
     constructor() {
-        this.TILESIZE = 16;
-        this.WORLD_SIZE = 32;
         this.layers = [];
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.spritesheet = new SpriteSheet(yield ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), 16, 2);
-            let response = yield fetch("assets/Tiled_projects/map.json");
+            let response = yield fetch("assets/map.json");
             let data = yield response.json();
+            World.WORLD_SIZE = data.height;
+            console.log(World.WORLD_SIZE);
             data.layers.forEach(layerData => {
                 this.layers.push(layerData.data);
                 // console.log(layerData.data)
             });
-            console.log(this.layers);
+            this.tilesize = this.spritesheet.getTileSize();
         });
     }
-    drawLayer(ctx, layer) {
-        for (let i = 0; i < this.WORLD_SIZE; i++) {
-            for (let j = 0; j < this.WORLD_SIZE; j++) {
+    drawLayer(ctx, layer, offsetx, offsety) {
+        for (let i = 0; i < World.WORLD_SIZE; i++) {
+            for (let j = 0; j < World.WORLD_SIZE; j++) {
                 const tileID = this.getTileID(layer, j, i);
-                this.spritesheet.renderSpriteById(ctx, tileID, j * this.TILESIZE, i * this.TILESIZE);
+                this.spritesheet.renderSpriteById(ctx, tileID, (j * this.tilesize) + offsetx, (i * this.tilesize) + offsety);
             }
         }
     }
     getTileID(layer, x, y) {
-        return this.layers[layer][x + (y * this.WORLD_SIZE)] - 1; // -1 because the results of the Tiled software do not include 0 as the first index
+        return this.layers[layer][x + (y * World.WORLD_SIZE)] - 1; // -1 because the results of the Tiled software do not include 0 as the first index
+    }
+    getLayers() {
+        return this.layers;
     }
 }
 //# sourceMappingURL=World.js.map

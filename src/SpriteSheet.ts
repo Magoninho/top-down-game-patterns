@@ -40,4 +40,8 @@ export default class SpriteSheet {
 			this.tilesize*this.scale // target height
 		);
 	}
+
+	public getTileSize(): number {
+		return this.tilesize;
+	}
 }

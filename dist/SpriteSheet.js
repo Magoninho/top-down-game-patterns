@@ -26,5 +26,8 @@ export default class SpriteSheet {
         this.tilesize * this.scale // target height
         );
     }
+    getTileSize() {
+        return this.tilesize;
+    }
 }
 //# sourceMappingURL=SpriteSheet.js.map

@@ -29,7 +29,8 @@ export default class Player extends Entity {
     render(ctx) {
         // a nice little way to make animations
         this.frame = (this.frame + 0.1) % 3;
-        ctx.drawImage(this.spritesheet, Math.floor(this.frame) * this.width, this.row * this.height, this.width, this.height, (this.x * World.SCALE) + 332, (this.y * World.SCALE) + 200, this.width * World.SCALE, this.height * World.SCALE);
+        ctx.drawImage(this.spritesheet, Math.floor(this.frame) * this.width, this.row * this.height, this.width, this.height, (this.x * World.SCALE) + 332, // temporary values, just for testing
+        (this.y * World.SCALE) + 200, this.width * World.SCALE, this.height * World.SCALE);
     }
 }
 //# sourceMappingURL=Player.js.map

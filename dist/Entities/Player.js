@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import Game from "../Game.js";
 import ImageUtils from "../ImageUtils.js";
 import World from "../World.js";
 import Entity from "./Entity.js";
@@ -30,7 +29,7 @@ export default class Player extends Entity {
     render(ctx) {
         // a nice little way to make animations
         this.frame = (this.frame + 0.1) % 3;
-        ctx.drawImage(this.spritesheet, Math.floor(this.frame) * this.width, this.row * this.height, this.width, this.height, (this.x * World.SCALE) + Game.WIDTH / 2, (this.y * World.SCALE) + Game.HEIGHT / 2, this.width * World.SCALE, this.height * World.SCALE);
+        ctx.drawImage(this.spritesheet, Math.floor(this.frame) * this.width, this.row * this.height, this.width, this.height, (this.x * World.SCALE) + 332, (this.y * World.SCALE) + 200, this.width * World.SCALE, this.height * World.SCALE);
     }
 }
 //# sourceMappingURL=Player.js.map

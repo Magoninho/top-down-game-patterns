@@ -66,12 +66,8 @@ export default class Game {
 			this.world.drawLayer(ctx, l, -Camera.x, -Camera.y);
 			
 		}
-
-		
-		// the last layer is where we have solid tiles
-		// TODO: figure that out later
-		this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
 		this.player.render(ctx);
+		this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
 		
 		this.ctx.fillStyle = "red";
 		this.ctx.font = "48px sans"

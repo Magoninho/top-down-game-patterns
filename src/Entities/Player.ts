@@ -34,8 +34,8 @@ export default class Player extends Entity {
 			this.row*this.height,
 			this.width, 
 			this.height,
-			(this.x * World.SCALE) + Game.WIDTH/2,
-			(this.y * World.SCALE) + Game.HEIGHT/2,
+			(this.x * World.SCALE) + 332,
+			(this.y * World.SCALE) + 200,
 			this.width * World.SCALE,
 			this.height * World.SCALE
 		)

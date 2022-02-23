@@ -35,11 +35,12 @@ export default class Game {
 
 	public update(): void {
 		// Temporary, just to move the camera around the world
-		Camera.x += 0.4;
-		Camera.y += 0.4;
+		Camera.x += 2;
+		Camera.y = 0;
 
 		// World size in pixels
-		let worldSize = World.WORLD_SIZE*World.tilesize;
+		// TODO : remove from update
+		let worldSize = World.WORLD_SIZE*World.tilesize*2;
 
 		// Camera clamping
 		Camera.y = Math.max(Camera.y, 0);
@@ -50,8 +51,8 @@ export default class Game {
 		// 		scale = 3; width / 3
 		//		...
 		// That was the best explanation I could give in a comment, feel free to change it with a pull request :D
-		Camera.x = Math.min(Camera.x, worldSize-Game.WIDTH/World.SCALE);
-		Camera.y = Math.min(Camera.y, worldSize-Game.HEIGHT/World.SCALE);
+		Camera.x = Math.min(Camera.x, worldSize-Game.WIDTH);
+		Camera.y = Math.min(Camera.y, worldSize-Game.HEIGHT);
 
 		
 	}
@@ -72,8 +73,8 @@ export default class Game {
 		this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
 		this.player.render(ctx);
 		
-		// this.ctx.fillStyle = "red";
-		// this.ctx.font = "48px sans"
-		// this.ctx.fillText(`${Camera.x}`, 40, 40)
+		this.ctx.fillStyle = "red";
+		this.ctx.font = "48px sans"
+		this.ctx.fillText(`${Camera.x}`, 40, 40)
 	}
 }

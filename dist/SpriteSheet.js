@@ -22,8 +22,8 @@ export default class SpriteSheet {
         spritey * this.tilesize, // source y
         this.tilesize, // source width
         this.tilesize, // source height
-        x * this.scale, // target x
-        y * this.scale, // target y
+        x, // target x
+        y, // target y
         this.tilesize * this.scale, // target width
         this.tilesize * this.scale // target height
         );

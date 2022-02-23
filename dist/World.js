@@ -34,7 +34,7 @@ export default class World {
         for (let i = 0; i < World.WORLD_SIZE; i++) {
             for (let j = 0; j < World.WORLD_SIZE; j++) {
                 const tileID = this.getTileID(layer, j, i);
-                this.spritesheet.renderSpriteById(ctx, tileID, (j * World.tilesize) + offsetx, (i * World.tilesize) + offsety);
+                this.spritesheet.renderSpriteById(ctx, tileID, (j * World.tilesize * World.SCALE) + offsetx, (i * World.tilesize * World.SCALE) + offsety);
             }
         }
     }

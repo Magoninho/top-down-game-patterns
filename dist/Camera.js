@@ -1,4 +1,5 @@
 export default class Camera {
+    // TODO
     follow(entity) {
     }
     // update camera positions based on the entity position

@@ -1,24 +1,27 @@
 export default class Entity {
-	private x: number;
-	private y: number;
-	private width: number;
-	private height: number;
-	private sprite: HTMLImageElement;
+    // protected because we want the child classes to have access
+	protected x: number;
+	protected y: number;
+	protected width: number;
+	protected height: number;
+	protected spritesheet: HTMLImageElement;
 
-	constructor(x, y, width, height, sprite: HTMLImageElement) {
+	constructor(x, y, width, height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.sprite = sprite;
 	}
 
-	public update(deltaTime: number): void {
+    // Initializes assets for specific child classes
+    public async init(): Promise<void> {
 
+    }
+
+	public update(deltaTime: number): void {
 	}
 
 	public render(ctx: CanvasRenderingContext2D) {
-		
 	}
 
 	public getX(): number {

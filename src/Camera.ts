@@ -6,6 +6,7 @@ export default class Camera {
 	public static width: number;
 	public static height: number;
 
+	// TODO
 	public follow(entity: Entity) {
 
 	}

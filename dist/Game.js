@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import Camera from "./Camera.js";
+import Player from "./Entities/Player.js";
 import World from "./World.js";
 export default class Game {
     constructor(ctx) {
-        this.WIDTH = document.getElementById("game-canvas").clientWidth;
-        this.HEIGHT = document.getElementById("game-canvas").clientHeight;
         this.world = new World();
+        this.player = new Player(this, 0, 0);
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
     }
@@ -23,43 +23,49 @@ export default class Game {
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.world.init(); // loading world
-            console.log(World.WORLD_SIZE * this.world.tilesize);
+            yield this.player.init();
             this.run();
         });
     }
     // game loop function with delta time
     run() {
-        let then = Date.now();
-        let FPS = 60;
-        let now = Date.now();
-        let delta = now - then;
-        this.update(delta / 1000);
+        this.update();
         this.render(this.ctx);
-        then = now;
         // Request to do this again ASAP
         requestAnimationFrame(this.run.bind(this));
     }
-    update(deltaTime) {
-        Camera.x += 1.5;
-        Camera.y += 0.5;
-        let worldSize = World.WORLD_SIZE * this.world.tilesize;
+    update() {
+        // Temporary, just to move the camera around the world
+        Camera.x += 0.4;
+        Camera.y += 0.4;
+        // World size in pixels
+        let worldSize = World.WORLD_SIZE * World.tilesize;
         // Camera clamping
         Camera.y = Math.max(Camera.y, 0);
         Camera.x = Math.max(Camera.x, 0);
-        Camera.x = Math.min(Camera.x, worldSize - this.WIDTH * 0.5);
-        Camera.y = Math.min(Camera.y, worldSize - this.HEIGHT * 0.5);
+        // you must divide by the scale because the width, IN RELATION WITH THE SCALED WORLD, has DECREASED the amount of the scale
+        // e.g. scale = 2; width / 2
+        // 		scale = 3; width / 3
+        //		...
+        // That was the best explanation I could give in a comment, feel free to change it with a pull request :D
+        Camera.x = Math.min(Camera.x, worldSize - Game.WIDTH / World.SCALE);
+        Camera.y = Math.min(Camera.y, worldSize - Game.HEIGHT / World.SCALE);
     }
     render(ctx) {
-        // this.tempSpriteSheet.renderSpriteById(ctx, 884, 0, 0);
-        this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+        this.ctx.clearRect(0, 0, Game.WIDTH, Game.HEIGHT);
+        // Rendering all 4 layers that comes before the player
         for (let l = 0; l <= 4; l++) {
             this.world.drawLayer(ctx, l, -Camera.x, -Camera.y);
         }
-        // TODO: render the player
+        // the last layer is where we have solid tiles
+        // TODO: figure that out later
         this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
-        this.ctx.fillStyle = "red";
-        this.ctx.font = "48px sans";
-        this.ctx.fillText(`${Camera.x}`, 40, 40);
+        this.player.render(ctx);
+        // this.ctx.fillStyle = "red";
+        // this.ctx.font = "48px sans"
+        // this.ctx.fillText(`${Camera.x}`, 40, 40)
     }
 }
+Game.WIDTH = document.getElementById("game-canvas").clientWidth;
+Game.HEIGHT = document.getElementById("game-canvas").clientHeight;
 //# sourceMappingURL=Game.js.map

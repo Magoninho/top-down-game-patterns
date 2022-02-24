@@ -1,3 +1,5 @@
+import World from "./World.js";
+
 export default class SpriteSheet {
 	private image: HTMLImageElement;
 	private tilesize: number;
@@ -38,8 +40,8 @@ export default class SpriteSheet {
 			this.tilesize, // source height
 			x, // target x
 			y, // target y
-			this.tilesize*this.scale, // target width
-			this.tilesize*this.scale  // target height
+			this.tilesize*World.SCALE, // target width
+			this.tilesize*World.SCALE  // target height
 		);
 	}
 

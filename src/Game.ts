@@ -1,13 +1,16 @@
 import Camera from "./Camera.js";
 import Player from "./Entities/Player.js";
+import InputHandler from "./InputHandler.js";
 import World from "./World.js";
 
 export default class Game {
-	private ctx: CanvasRenderingContext2D;
+	public ctx: CanvasRenderingContext2D;
 	public static WIDTH: number = document.getElementById("game-canvas").clientWidth;
 	public static HEIGHT: number = document.getElementById("game-canvas").clientHeight;
-	private world: World = new World();
-	private player: Player = new Player(this, 0, 0);
+	public world: World = new World();
+	public player: Player = new Player(this, 0, 0);
+	public inputHandler: InputHandler = new InputHandler();
+	public camera: Camera = new Camera();
 
 	constructor(ctx) {
 		this.ctx = ctx;
@@ -20,6 +23,8 @@ export default class Game {
 	public async start() {
 		await this.world.init(); // loading world
 		await this.player.init();
+
+		this.camera.follow(this.player);
 		this.run();
 	}
 
@@ -34,18 +39,8 @@ export default class Game {
 	}
 
 	public update(): void {
-		// Temporary, just to move the camera around the world
-		Camera.x += 2;
-		Camera.y = 0;
-
-		// Camera clamping
-		Camera.y = Math.max(Camera.y, 0);
-		Camera.x = Math.max(Camera.x, 0);
-
-		Camera.x = Math.min(Camera.x, World.WORLD_WIDTH-Game.WIDTH);
-		Camera.y = Math.min(Camera.y, World.WORLD_HEIGHT-Game.HEIGHT);
-
-		
+		this.player.update();
+		this.camera.update();
 	}
 
 
@@ -63,9 +58,5 @@ export default class Game {
 
 		// This layer has things that will be over the player (e.g. the flag)
 		this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
-		
-		this.ctx.fillStyle = "red";
-		this.ctx.font = "48px sans"
-		this.ctx.fillText(`${Camera.x}`, 40, 40)
 	}
 }

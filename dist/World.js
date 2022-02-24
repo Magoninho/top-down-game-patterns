@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import Camera from "./Camera.js";
 import ImageUtils from "./ImageUtils.js";
 import SpriteSheet from "./SpriteSheet.js";
 export default class World {
@@ -16,7 +17,7 @@ export default class World {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.spritesheet = new SpriteSheet(yield ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.tilesize, World.SCALE);
+            this.spritesheet = new SpriteSheet(yield ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.TILESIZE, World.SCALE);
             // fetching data from map.json
             let response = yield fetch("assets/map.json");
             let data = yield response.json();
@@ -25,8 +26,8 @@ export default class World {
             World.WORLD_WIDTH_IN_TILES = data.width;
             World.WORLD_HEIGHT_IN_TILES = data.height;
             // World width and height in pixels
-            World.WORLD_WIDTH = World.WORLD_WIDTH_IN_TILES * World.tilesize * World.SCALE;
-            World.WORLD_HEIGHT = World.WORLD_HEIGHT_IN_TILES * World.tilesize * World.SCALE;
+            World.WORLD_WIDTH = World.WORLD_WIDTH_IN_TILES * World.TILESIZE * World.SCALE;
+            World.WORLD_HEIGHT = World.WORLD_HEIGHT_IN_TILES * World.TILESIZE * World.SCALE;
             // pushing layers data from map.json to this.layers
             data.layers.forEach(layerData => {
                 this.layers.push(layerData.data);
@@ -35,12 +36,18 @@ export default class World {
     }
     // Draws a selected layer, with offsets, generally handled by the camera class
     drawLayer(ctx, layer, offsetx, offsety) {
-        for (let i = 0; i < World.WORLD_WIDTH_IN_TILES; i++) {
-            for (let j = 0; j < World.WORLD_WIDTH_IN_TILES; j++) {
+        // This will make sure that what is being rendered is inside of the camera
+        // Understand is like a render distance
+        let startCol = Math.floor(Camera.x / (World.TILESIZE * World.SCALE));
+        let startRow = Math.floor(Camera.y / (World.TILESIZE * World.SCALE));
+        let endCol = startCol + Math.floor(Camera.width / (World.TILESIZE * World.SCALE));
+        let endRow = startRow + Math.floor(Camera.height / (World.TILESIZE * World.SCALE));
+        for (let i = startRow; i <= endRow; i++) {
+            for (let j = startCol; j <= endCol; j++) {
                 const tileID = this.getTileID(layer, j, i);
                 // Rendering every sprite
                 // Remember to multiply it by the world scale
-                this.spritesheet.renderSpriteById(ctx, tileID, (j * World.tilesize * World.SCALE) + offsetx, (i * World.tilesize * World.SCALE) + offsety);
+                this.spritesheet.renderSpriteById(ctx, tileID, (j * World.TILESIZE * World.SCALE) + offsetx, (i * World.TILESIZE * World.SCALE) + offsety);
             }
         }
     }
@@ -52,7 +59,7 @@ export default class World {
         return this.layers;
     }
 }
-World.tilesize = 16;
+World.TILESIZE = 16;
 // Scaling factor, we could also use the ctx.scale() function, but this give us more control
 World.SCALE = 2;
 //# sourceMappingURL=World.js.map

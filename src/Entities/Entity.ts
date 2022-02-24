@@ -6,11 +6,9 @@ export default class Entity {
 	protected height: number;
 	protected spritesheet: HTMLImageElement;
 
-	constructor(x, y, width, height) {
+	constructor(x: number, y: number) {
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
 	}
 
     // Initializes assets for specific child classes
@@ -38,21 +36,5 @@ export default class Entity {
 
     public setY(y: number): void {
         this.y = y;
-    }
-
-    public getWidth(): number {
-        return this.width;
-    }
-
-    public setWidth(width: number): void {
-        this.width = width;
-    }
-
-    public getHeight(): number {
-        return this.height;
-    }
-
-    public setHeight(height: number): void {
-        this.height = height;
     }
 }

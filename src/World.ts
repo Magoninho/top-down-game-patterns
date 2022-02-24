@@ -7,7 +7,7 @@ export default class World {
 	public static WORLD_HEIGHT_IN_TILES: number;
 	public static WORLD_WIDTH: number;
 	public static WORLD_HEIGHT: number;
-	public static tilesize: number = 16;
+	public static TILESIZE: number = 16;
 
 	// Scaling factor, we could also use the ctx.scale() function, but this give us more control
 	public static SCALE: number = 2;
@@ -17,7 +17,7 @@ export default class World {
 	private layers: number[] = [];
 
 	public async init() {
-		this.spritesheet = new SpriteSheet(await ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.tilesize, World.SCALE);
+		this.spritesheet = new SpriteSheet(await ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.TILESIZE, World.SCALE);
 
 		// fetching data from map.json
 		let response = await fetch("assets/map.json");
@@ -28,8 +28,8 @@ export default class World {
 		World.WORLD_WIDTH_IN_TILES = data.width; 
 		World.WORLD_HEIGHT_IN_TILES = data.height; 
 		// World width and height in pixels
-		World.WORLD_WIDTH = World.WORLD_WIDTH_IN_TILES*World.tilesize*World.SCALE;
-		World.WORLD_HEIGHT = World.WORLD_HEIGHT_IN_TILES*World.tilesize*World.SCALE;
+		World.WORLD_WIDTH = World.WORLD_WIDTH_IN_TILES*World.TILESIZE*World.SCALE;
+		World.WORLD_HEIGHT = World.WORLD_HEIGHT_IN_TILES*World.TILESIZE*World.SCALE;
 
 		// pushing layers data from map.json to this.layers
 		data.layers.forEach(layerData => {
@@ -39,13 +39,22 @@ export default class World {
 
 	// Draws a selected layer, with offsets, generally handled by the camera class
 	public drawLayer(ctx: CanvasRenderingContext2D, layer: number, offsetx: number, offsety: number): void {
-		for (let i = 0; i < World.WORLD_WIDTH_IN_TILES; i++) {
-			for (let j = 0; j < World.WORLD_WIDTH_IN_TILES; j++) {
+
+		// This will make sure that what is being rendered is inside of the camera
+		// Understand is like a render distance
+		let startCol = Math.floor(Camera.x / (World.TILESIZE*World.SCALE));
+		let startRow = Math.floor(Camera.y / (World.TILESIZE*World.SCALE));
+
+		let endCol = startCol + Math.floor(Camera.width / (World.TILESIZE*World.SCALE));
+		let endRow = startRow + Math.floor(Camera.height / (World.TILESIZE*World.SCALE));
+
+		for (let i = startRow; i <= endRow; i++) {
+			for (let j = startCol; j <= endCol; j++) {
 				const tileID = this.getTileID(layer, j, i);
 
 				// Rendering every sprite
 				// Remember to multiply it by the world scale
-				this.spritesheet.renderSpriteById(ctx, tileID, (j * World.tilesize * World.SCALE) + offsetx, (i * World.tilesize * World.SCALE) + offsety);
+				this.spritesheet.renderSpriteById(ctx, tileID, (j * World.TILESIZE * World.SCALE) + offsetx, (i * World.TILESIZE * World.SCALE) + offsety);
 			}
 		}
 	}

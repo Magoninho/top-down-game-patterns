@@ -8,11 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export default class Entity {
-    constructor(x, y, width, height) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
     }
     // Initializes assets for specific child classes
     init() {
@@ -34,18 +32,6 @@ export default class Entity {
     }
     setY(y) {
         this.y = y;
-    }
-    getWidth() {
-        return this.width;
-    }
-    setWidth(width) {
-        this.width = width;
-    }
-    getHeight() {
-        return this.height;
-    }
-    setHeight(height) {
-        this.height = height;
     }
 }
 //# sourceMappingURL=Entity.js.map

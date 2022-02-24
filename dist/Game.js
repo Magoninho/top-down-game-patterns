@@ -9,11 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import Camera from "./Camera.js";
 import Player from "./Entities/Player.js";
+import InputHandler from "./InputHandler.js";
 import World from "./World.js";
 export default class Game {
     constructor(ctx) {
         this.world = new World();
         this.player = new Player(this, 0, 0);
+        this.inputHandler = new InputHandler();
+        this.camera = new Camera();
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
     }
@@ -24,6 +27,7 @@ export default class Game {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.world.init(); // loading world
             yield this.player.init();
+            this.camera.follow(this.player);
             this.run();
         });
     }
@@ -35,14 +39,8 @@ export default class Game {
         requestAnimationFrame(this.run.bind(this));
     }
     update() {
-        // Temporary, just to move the camera around the world
-        Camera.x += 2;
-        Camera.y = 0;
-        // Camera clamping
-        Camera.y = Math.max(Camera.y, 0);
-        Camera.x = Math.max(Camera.x, 0);
-        Camera.x = Math.min(Camera.x, World.WORLD_WIDTH - Game.WIDTH);
-        Camera.y = Math.min(Camera.y, World.WORLD_HEIGHT - Game.HEIGHT);
+        this.player.update();
+        this.camera.update();
     }
     render(ctx) {
         this.ctx.clearRect(0, 0, Game.WIDTH, Game.HEIGHT);
@@ -54,9 +52,6 @@ export default class Game {
         this.player.render(ctx);
         // This layer has things that will be over the player (e.g. the flag)
         this.world.drawLayer(ctx, 5, -Camera.x, -Camera.y);
-        this.ctx.fillStyle = "red";
-        this.ctx.font = "48px sans";
-        this.ctx.fillText(`${Camera.x}`, 40, 40);
     }
 }
 Game.WIDTH = document.getElementById("game-canvas").clientWidth;

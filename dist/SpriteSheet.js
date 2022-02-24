@@ -1,3 +1,4 @@
+import World from "./World.js";
 export default class SpriteSheet {
     constructor(image, tilesize, scale) {
         this.scale = 1;
@@ -24,8 +25,8 @@ export default class SpriteSheet {
         this.tilesize, // source height
         x, // target x
         y, // target y
-        this.tilesize * this.scale, // target width
-        this.tilesize * this.scale // target height
+        this.tilesize * World.SCALE, // target width
+        this.tilesize * World.SCALE // target height
         );
     }
     getTileSize() {

@@ -52,14 +52,14 @@ export default class Player extends Entity {
         if (this.x < 0) {
             this.x = 0;
         }
-        if (this.x > World.WORLD_WIDTH - this.width) {
-            this.x = World.WORLD_WIDTH - this.width;
+        if (this.x > World.WORLD_WIDTH - this.width * World.SCALE) {
+            this.x = World.WORLD_WIDTH - this.width * World.SCALE;
         }
         if (this.y < 0) {
             this.y = 0;
         }
-        if (this.y > World.WORLD_HEIGHT - this.height) {
-            this.y = World.WORLD_HEIGHT - this.height;
+        if (this.y > World.WORLD_HEIGHT - this.height * World.SCALE) {
+            this.y = World.WORLD_HEIGHT - this.height * World.SCALE;
         }
     }
     update() {

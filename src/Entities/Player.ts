@@ -79,6 +79,8 @@ export default class Player extends Entity {
 		this.dx = 0;
 		this.dy = 0;
 
+		// changing directions and changing row animation
+		// see "assets/gfx/Entity/player.png"
 		if (this.game.inputHandler.isDown(37)) { // left
 			this.dx = -1;
 

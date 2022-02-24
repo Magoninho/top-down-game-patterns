@@ -19,12 +19,12 @@ export default class SpriteSheet {
 	}
 
 	// Renders a sprite from col and row positions on the spritesheet image
-	public renderSprite(ctx: CanvasRenderingContext2D, col: number, row: number, x: number, y: number): void {
+	public renderTile(ctx: CanvasRenderingContext2D, col: number, row: number, x: number, y: number): void {
 		ctx.drawImage(this.image, col*this.tilesize, row*this.tilesize, this.tilesize, this.tilesize, x, y, this.tilesize*this.scale, this.tilesize*this.scale);
 	}
 
 	// Renders a sprite from an ID (x + (y * world_size))
-	public renderSpriteById(ctx: CanvasRenderingContext2D, ID: number, x: number, y: number): void {
+	public renderTileById(ctx: CanvasRenderingContext2D, ID: number, x: number, y: number): void {
 		
 		// a nice formula to find x and y with a tile ID
 		// remember that the tile ID is x + (y * width)

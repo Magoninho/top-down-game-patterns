@@ -54,7 +54,7 @@ export default class World {
 
 				// Rendering every sprite
 				// Remember to multiply it by the world scale
-				this.spritesheet.renderSpriteById(ctx, tileID, (j * World.TILESIZE * World.SCALE) + offsetx, (i * World.TILESIZE * World.SCALE) + offsety);
+				this.spritesheet.renderTileById(ctx, tileID, (j * World.TILESIZE * World.SCALE) + offsetx, (i * World.TILESIZE * World.SCALE) + offsety);
 			}
 		}
 	}

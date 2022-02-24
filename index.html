@@ -5,11 +5,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style/style.css">
-	<!-- <audio src="assets/sound/town.mp3" autoplay></audio> -->
+	<audio src="assets/sound/town.mp3" id="theme"></audio>
 	<title>Top-Down Game Patterns</title>
 </head>
 <body>
-	<canvas id="game-canvas" width="480" height="480"></canvas>
+
+	<div>
+		<canvas id="game-canvas" width="480" height="480"></canvas>
+		<button id="run-game" style="position: absolute; left: 180px; top: 220px;">&#9873; Run game</button>
+	</div>
+
 	<script type="module" src="dist/Main.js"></script>
 </body>
 </html>

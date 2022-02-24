@@ -12,9 +12,17 @@ let canvas = document.getElementById("game-canvas");
 let ctx = canvas.getContext("2d");
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
+        document.getElementById("run-game").style.display = "none";
+        document.getElementById("theme").play();
         let game = new Game(ctx);
         yield game.start();
     });
 }
-start();
+const DEBUG = false;
+if (!DEBUG) {
+    document.getElementById("run-game").addEventListener("click", start);
+}
+else {
+    start();
+}
 //# sourceMappingURL=Main.js.map

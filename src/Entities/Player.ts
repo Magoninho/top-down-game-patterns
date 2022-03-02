@@ -1,6 +1,7 @@
 import Camera from "../Camera.js";
 import Game from "../Game.js";
 import ImageUtils from "../ImageUtils.js";
+import Tile from "../Tile/Tile.js";
 import World from "../World.js";
 import Entity from "./Entity.js";
 
@@ -18,19 +19,63 @@ export default class Player extends Entity {
 
 	// animation variables
 	private frame: number = 0;
-	private row: number = 0 ;
+	private row: number = 0;
 
 	constructor(game: Game, x: number, y: number) {
 		super(x, y);
 
 		this.game = game;
+
 	}
 
 	public async init(): Promise<void> {
 		this.spritesheet = await ImageUtils.loadImageFromUrl("assets/gfx/Entity/player.png");
 		// positioning the player to be right on the door
-		this.x = World.WORLD_WIDTH/4;
-		this.y = World.WORLD_HEIGHT/4;
+		this.x = World.WORLD_WIDTH / 4;
+		this.y = World.WORLD_HEIGHT - 500;
+		// this.x = 0;
+	}
+
+	public collide(dirx, diry) {
+
+		let xa = dirx * Player.speed;
+		let ya = diry * Player.speed;
+
+		let offsetx = 4 * World.SCALE;
+		let offsety = 9 * World.SCALE;
+
+		// Collision box
+		let box_x = this.x + offsetx;
+		let box_y = this.y + offsety;
+		let box_width = this.width/2;
+		let box_height = this.height/2;
+
+		// the next position the player will be
+		let nextX = box_x + xa;
+		let nextY = box_y + ya;
+
+		// Now checking if there is collision in the next position in all corners of the square
+		// Top left
+		let topLeftX: number = nextX;
+		let topLeftY: number = nextY;
+
+		// Top right
+		let topRightX: number = (nextX + box_width * World.SCALE);
+		let topRightY: number = nextY;
+
+		// Bottom left
+		let bottomLeftX: number = nextX;
+		let bottomLeftY: number = (nextY + box_height * World.SCALE);
+
+		// Bottom right
+		let bottomRightX: number = (nextX + box_width * World.SCALE);
+		let bottomRightY: number = (nextY + box_height * World.SCALE);
+
+		let collision: boolean = this.game.world.isSolidTileAt(topLeftX, topLeftY) ||
+			this.game.world.isSolidTileAt(topRightX, topRightY) ||
+			this.game.world.isSolidTileAt(bottomLeftX, bottomLeftY) ||
+			this.game.world.isSolidTileAt(bottomRightX, bottomRightY);
+		return collision;
 	}
 
 	public move(dirx: number, diry: number) {
@@ -51,10 +96,13 @@ export default class Player extends Entity {
 
 
 		// adding the velocity vector to player's position
-		this.x += vx;
-		this.y += vy;
+		// TODO: comment
+		if (!this.collide(dirx, 0))
+			this.x += vx;
+		if (!this.collide(0, diry)) 
+			this.y += vy;
+		// this.collide(0, diry);
 
-		// TODO: collision function call
 
 		// Clamping player position
 		if (this.x < 0) {
@@ -120,15 +168,27 @@ export default class Player extends Entity {
 		let flooredFrame = Math.floor(this.frame);
 		ctx.drawImage(
 			this.spritesheet,
-			flooredFrame*this.width,
-			this.row*this.height,
-			this.width, 
+			flooredFrame * this.width,
+			this.row * this.height,
+			this.width,
 			this.height,
 			// remember to also use the camera offset on the player, otherwise it won't work!
-			(this.x -Camera.x),
-			(this.y -Camera.y),
+			(this.x - Camera.x),
+			(this.y - Camera.y),
 			this.width * World.SCALE,
 			this.height * World.SCALE
 		);
+
+		let offsetx = 4 * World.SCALE;
+		let offsety = 9 * World.SCALE;
+
+		// Collision box
+		let box_x = this.x + offsetx;
+		let box_y = this.y + offsety;
+		let box_width = this.width/2;
+		let box_height = this.height/2;
+
+		ctx.fillStyle = "red";
+		ctx.fillRect(box_x - Camera.x, box_y - Camera.y, box_width * World.SCALE, box_height * World.SCALE);
 	}
 }

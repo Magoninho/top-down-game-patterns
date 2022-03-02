@@ -82,8 +82,9 @@ export default class Player extends Entity {
 		this.frame = (this.frame + 0.1) % 3;
 
 		// Velocity vector
-		let vx = dirx * Player.speed;
-		let vy = diry * Player.speed;
+		// if player is swimming, then the speed will be divided by 2 (multiplied by 0.5, same thing)
+		let vx = this.isSwimming() ? dirx * Player.speed * 0.5 : dirx * Player.speed;
+		let vy = this.isSwimming() ? diry * Player.speed * 0.5 : diry * Player.speed;
 
 		// This fixes the problem of faster diagonals
 		// Better explanation later...

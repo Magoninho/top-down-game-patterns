@@ -18,7 +18,7 @@ function start() {
         yield game.start();
     });
 }
-const DEBUG = true;
+const DEBUG = false;
 if (!DEBUG) {
     document.getElementById("run-game").addEventListener("click", start);
 }

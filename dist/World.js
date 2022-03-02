@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import Camera from "./Camera.js";
+import Game from "./Game.js";
 import ImageUtils from "./ImageUtils.js";
 import SpriteSheet from "./SpriteSheet.js";
 export default class World {
@@ -19,8 +20,11 @@ export default class World {
         return __awaiter(this, void 0, void 0, function* () {
             this.spritesheet = new SpriteSheet(yield ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.TILESIZE, World.SCALE);
             // fetching data from map.json
+            Game.progressBar.addProgress(0);
             let response = yield fetch("assets/map.json");
+            Game.progressBar.addProgress(200 / 3);
             let data = yield response.json();
+            Game.progressBar.addProgress(200 / 3);
             // The world size is on the map.json
             // World width and height in tiles (32x32)
             World.WORLD_WIDTH_IN_TILES = data.width;

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import Camera from "../Camera.js";
+import Game from "../Game.js";
 import ImageUtils from "../ImageUtils.js";
 import World from "../World.js";
 import Entity from "./Entity.js";
@@ -29,6 +30,7 @@ export default class Player extends Entity {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.spritesheet = yield ImageUtils.loadImageFromUrl("assets/gfx/Entity/player.png");
+            Game.progressBar.addProgress(200 / 3);
             // positioning the player in some nice place
             this.x = World.WORLD_WIDTH / 4;
             this.y = World.WORLD_HEIGHT - 500;

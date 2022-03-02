@@ -31,6 +31,7 @@ export default class Player extends Entity {
 
 	public async init(): Promise<void> {
 		this.spritesheet = await ImageUtils.loadImageFromUrl("assets/gfx/Entity/player.png");
+		Game.progressBar.addProgress(200/3);
 		// positioning the player in some nice place
 		this.x = World.WORLD_WIDTH / 4;
 		this.y = World.WORLD_HEIGHT - 500;

@@ -1,4 +1,5 @@
 import Camera from "./Camera.js";
+import Game from "./Game.js";
 import ImageUtils from "./ImageUtils.js";
 import SpriteSheet from "./SpriteSheet.js";
 
@@ -20,8 +21,11 @@ export default class World {
 		this.spritesheet = new SpriteSheet(await ImageUtils.loadImageFromUrl("assets/gfx/Overworld.png"), World.TILESIZE, World.SCALE);
 
 		// fetching data from map.json
+		Game.progressBar.addProgress(0);
 		let response = await fetch("assets/map.json");
+		Game.progressBar.addProgress(200/3);
 		let data = await response.json();
+		Game.progressBar.addProgress(200/3);
 
 		// The world size is on the map.json
 		// World width and height in tiles (32x32)

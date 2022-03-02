@@ -12,25 +12,20 @@ export default class Game {
 	public player: Player = new Player(this, 0, 0);
 	public inputHandler: InputHandler = new InputHandler();
 	public camera: Camera = new Camera();
-	public progressBar: ProgressBar = new ProgressBar();
+	public static progressBar: ProgressBar;
 
 	constructor(ctx) {
 		this.ctx = ctx;
 		this.ctx.imageSmoothingEnabled = false;
+		Game.progressBar = new ProgressBar(this.ctx); // initializing progress bar
 	}
 
 	/**
 	 * This function will load assets and start the game
 	 */
 	public async start() {
-		// the number of stuff to be loaded
-		// in this case we have 2 (the world, and the player)
-
 		await this.world.init(); // loading world
-		this.progressBar.addProgress(100);
-		this.progressBar.render(this.ctx);
 		await this.player.init();
-		this.progressBar.addProgress(100);
 
 		this.camera.follow(this.player);
 		this.run();

@@ -4,6 +4,11 @@ export default class ProgressBar {
 	private y: number = 240 - 10;
 	public width: number = 200;
 	public height: number = 20;
+	private ctx: CanvasRenderingContext2D;
+
+	constructor(ctx: CanvasRenderingContext2D) {
+		this.ctx = ctx;
+	}
 
 	public render(ctx: CanvasRenderingContext2D) {
 		// rendering white border
@@ -16,5 +21,6 @@ export default class ProgressBar {
 
 	public addProgress(progress: number) {
 		this.progress += progress;
+		this.render(this.ctx);
 	}
 }

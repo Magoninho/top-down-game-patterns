@@ -18,22 +18,17 @@ export default class Game {
         this.player = new Player(this, 0, 0);
         this.inputHandler = new InputHandler();
         this.camera = new Camera();
-        this.progressBar = new ProgressBar();
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
+        Game.progressBar = new ProgressBar(this.ctx); // initializing progress bar
     }
     /**
      * This function will load assets and start the game
      */
     start() {
         return __awaiter(this, void 0, void 0, function* () {
-            // the number of stuff to be loaded
-            // in this case we have 2 (the world, and the player)
             yield this.world.init(); // loading world
-            this.progressBar.addProgress(100);
-            this.progressBar.render(this.ctx);
             yield this.player.init();
-            this.progressBar.addProgress(100);
             this.camera.follow(this.player);
             this.run();
         });

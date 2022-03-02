@@ -1,10 +1,11 @@
 export default class ProgressBar {
-    constructor() {
+    constructor(ctx) {
         this.progress = 0;
         this.x = 240 - 100;
         this.y = 240 - 10;
         this.width = 200;
         this.height = 20;
+        this.ctx = ctx;
     }
     render(ctx) {
         // rendering white border
@@ -16,6 +17,7 @@ export default class ProgressBar {
     }
     addProgress(progress) {
         this.progress += progress;
+        this.render(this.ctx);
     }
 }
 //# sourceMappingURL=ProgressBar.js.map

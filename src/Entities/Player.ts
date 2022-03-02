@@ -1,13 +1,11 @@
 import Camera from "../Camera.js";
 import Game from "../Game.js";
 import ImageUtils from "../ImageUtils.js";
-import Tile from "../Tile/Tile.js";
+import Rectangle from "../Math/Rectangle.js";
 import World from "../World.js";
 import Entity from "./Entity.js";
 
 export default class Player extends Entity {
-
-	private game: Game; // the game the player is on
 
 	protected width: number = 16;
 	protected height: number = 18;
@@ -15,7 +13,6 @@ export default class Player extends Entity {
 	private static speed: number = 1.4 * World.SCALE;
 	private dx: number = 0;
 	private dy: number = 0;
-	private moving: boolean = false;
 
 	// animation variables
 	private frame: number = 0;
@@ -44,11 +41,12 @@ export default class Player extends Entity {
 		let offsetx = 4 * World.SCALE;
 		let offsety = 9 * World.SCALE;
 
+		// TODO: make use of the Rectangle object!
 		// Collision box
 		let box_x = this.x + offsetx;
 		let box_y = this.y + offsety;
-		let box_width = this.width/2;
-		let box_height = this.height/2;
+		let box_width = this.width / 2;
+		let box_height = this.height / 2;
 
 		// the next position the player will be
 		let nextX = box_x + xa;
@@ -99,9 +97,8 @@ export default class Player extends Entity {
 		// TODO: comment
 		if (!this.collide(dirx, 0))
 			this.x += vx;
-		if (!this.collide(0, diry)) 
+		if (!this.collide(0, diry))
 			this.y += vy;
-		// this.collide(0, diry);
 
 
 		// Clamping player position
@@ -166,29 +163,48 @@ export default class Player extends Entity {
 	public render(ctx: CanvasRenderingContext2D) {
 		// Flooring the frame counter to turn it into an index
 		let flooredFrame = Math.floor(this.frame);
-		ctx.drawImage(
-			this.spritesheet,
-			flooredFrame * this.width,
-			this.row * this.height,
-			this.width,
-			this.height,
-			// remember to also use the camera offset on the player, otherwise it won't work!
-			(this.x - Camera.x),
-			(this.y - Camera.y),
-			this.width * World.SCALE,
-			this.height * World.SCALE
-		);
+		if (this.isSwimming()) {
+			ctx.drawImage(
+				this.spritesheet,
+				flooredFrame * this.width,
+				this.row * this.height,
+				this.width,
+				this.height - 6,
+				// remember to also use the camera offset on the player, otherwise it won't work!
+				(this.x - Camera.x),
+				(this.y - Camera.y),
+				this.width * World.SCALE,
+				this.height * World.SCALE - 12
+			);
+		} else {
+			ctx.drawImage(
+				this.spritesheet,
+				flooredFrame * this.width,
+				this.row * this.height,
+				this.width,
+				this.height,
+				// remember to also use the camera offset on the player, otherwise it won't work!
+				(this.x - Camera.x),
+				(this.y - Camera.y),
+				this.width * World.SCALE,
+				this.height * World.SCALE
+			);
+		}
 
-		let offsetx = 4 * World.SCALE;
-		let offsety = 9 * World.SCALE;
+		// let offsetx = 4 * World.SCALE;
+		// let offsety = 9 * World.SCALE;
 
-		// Collision box
-		let box_x = this.x + offsetx;
-		let box_y = this.y + offsety;
-		let box_width = this.width/2;
-		let box_height = this.height/2;
+		// // Collision box
+		// let collisionBox = new Rectangle(
+		// 	this.x + offsetx - Camera.x,
+		// 	this.y + offsety - Camera.y,
+		// 	(this.width / 2) * World.SCALE,
+		// 	(this.height / 2) * World.SCALE);
 
-		ctx.fillStyle = "red";
-		ctx.fillRect(box_x - Camera.x, box_y - Camera.y, box_width * World.SCALE, box_height * World.SCALE);
+		// collisionBox.render(ctx, "rgb(0,180,255,0.8)");
+	}
+
+	public canSwim(): boolean {
+		return true;
 	}
 }

@@ -21,6 +21,13 @@ export default class Entity {
     }
     render(ctx) {
     }
+    canSwim() {
+        return false;
+    }
+    isSwimming() {
+        // returns if there is a liquid tile where the entity is
+        return (this.game.world.isLiquidAt(this.x + this.width / 2, this.y + this.height / 2));
+    }
     getX() {
         return this.x;
     }

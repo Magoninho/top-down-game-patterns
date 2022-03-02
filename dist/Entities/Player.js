@@ -18,7 +18,6 @@ export default class Player extends Entity {
         this.height = 18;
         this.dx = 0;
         this.dy = 0;
-        this.moving = false;
         // animation variables
         this.frame = 0;
         this.row = 0;
@@ -38,6 +37,7 @@ export default class Player extends Entity {
         let ya = diry * Player.speed;
         let offsetx = 4 * World.SCALE;
         let offsety = 9 * World.SCALE;
+        // TODO: make use of the Rectangle object!
         // Collision box
         let box_x = this.x + offsetx;
         let box_y = this.y + offsety;
@@ -83,7 +83,6 @@ export default class Player extends Entity {
             this.x += vx;
         if (!this.collide(0, diry))
             this.y += vy;
-        // this.collide(0, diry);
         // Clamping player position
         if (this.x < 0) {
             this.x = 0;
@@ -133,18 +132,28 @@ export default class Player extends Entity {
     render(ctx) {
         // Flooring the frame counter to turn it into an index
         let flooredFrame = Math.floor(this.frame);
-        ctx.drawImage(this.spritesheet, flooredFrame * this.width, this.row * this.height, this.width, this.height, 
-        // remember to also use the camera offset on the player, otherwise it won't work!
-        (this.x - Camera.x), (this.y - Camera.y), this.width * World.SCALE, this.height * World.SCALE);
-        let offsetx = 4 * World.SCALE;
-        let offsety = 9 * World.SCALE;
-        // Collision box
-        let box_x = this.x + offsetx;
-        let box_y = this.y + offsety;
-        let box_width = this.width / 2;
-        let box_height = this.height / 2;
-        ctx.fillStyle = "red";
-        ctx.fillRect(box_x - Camera.x, box_y - Camera.y, box_width * World.SCALE, box_height * World.SCALE);
+        if (this.isSwimming()) {
+            ctx.drawImage(this.spritesheet, flooredFrame * this.width, this.row * this.height, this.width, this.height - 6, 
+            // remember to also use the camera offset on the player, otherwise it won't work!
+            (this.x - Camera.x), (this.y - Camera.y), this.width * World.SCALE, this.height * World.SCALE - 12);
+        }
+        else {
+            ctx.drawImage(this.spritesheet, flooredFrame * this.width, this.row * this.height, this.width, this.height, 
+            // remember to also use the camera offset on the player, otherwise it won't work!
+            (this.x - Camera.x), (this.y - Camera.y), this.width * World.SCALE, this.height * World.SCALE);
+        }
+        // let offsetx = 4 * World.SCALE;
+        // let offsety = 9 * World.SCALE;
+        // // Collision box
+        // let collisionBox = new Rectangle(
+        // 	this.x + offsetx - Camera.x,
+        // 	this.y + offsety - Camera.y,
+        // 	(this.width / 2) * World.SCALE,
+        // 	(this.height / 2) * World.SCALE);
+        // collisionBox.render(ctx, "rgb(0,180,255,0.8)");
+    }
+    canSwim() {
+        return true;
     }
 }
 Player.speed = 1.4 * World.SCALE;

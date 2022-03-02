@@ -62,10 +62,17 @@ export default class World {
 	public isSolidTileAt(x: number, y: number): boolean {
 		let solidLayer = 4; // the solid layer from this.layers
 
-		let col = Math.floor(x / (World.TILESIZE * World.SCALE));
-		let row = Math.floor(y / (World.TILESIZE * World.SCALE));
+		let col = this.getCol(x);
+		let row = this.getRow(y);
 		// if it is different from -1 in the solid layer, then it is solid
 		return this.getTileID(solidLayer, col, row) != -1;
+	}
+
+	public isLiquidAt(x: number, y: number) {
+		let waterLevel = 1;
+		let col = this.getCol(x);
+        let row = this.getRow(y);
+		return this.getTileID(waterLevel, col, row) == 283;
 	}
 
 	// Gets a tile ID, which is basically (x + (y * world_size)) on the spritesheet
@@ -73,6 +80,13 @@ export default class World {
 		return this.layers[layer][x + (y * World.WORLD_WIDTH_IN_TILES)] - 1; // -1 because the results of the Tiled software do not include 0 as the first index
 	}
 
+	public getCol(x: number): number {
+		return Math.floor(x / (World.TILESIZE * World.SCALE));
+	}
+
+	public getRow(y: number): number {
+		return Math.floor(y / (World.TILESIZE * World.SCALE));
+	}
 
 	public getLayers(): number[] {
         return this.layers;

@@ -1,6 +1,7 @@
 import Camera from "./Camera.js";
 import Player from "./Entities/Player.js";
 import InputHandler from "./InputHandler.js";
+import ProgressBar from "./Misc/ProgressBar.js";
 import World from "./World.js";
 
 export default class Game {
@@ -11,6 +12,7 @@ export default class Game {
 	public player: Player = new Player(this, 0, 0);
 	public inputHandler: InputHandler = new InputHandler();
 	public camera: Camera = new Camera();
+	public progressBar: ProgressBar = new ProgressBar();
 
 	constructor(ctx) {
 		this.ctx = ctx;
@@ -21,14 +23,20 @@ export default class Game {
 	 * This function will load assets and start the game
 	 */
 	public async start() {
+		// the number of stuff to be loaded
+		// in this case we have 2 (the world, and the player)
+
 		await this.world.init(); // loading world
+		this.progressBar.addProgress(100);
+		this.progressBar.render(this.ctx);
 		await this.player.init();
+		this.progressBar.addProgress(100);
 
 		this.camera.follow(this.player);
 		this.run();
 	}
 
-	// game loop function with delta time
+	// game loop
 	public run(): void {
 
 		this.update();

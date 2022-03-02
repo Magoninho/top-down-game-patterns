@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Camera from "./Camera.js";
 import Player from "./Entities/Player.js";
 import InputHandler from "./InputHandler.js";
+import ProgressBar from "./Misc/ProgressBar.js";
 import World from "./World.js";
 export default class Game {
     constructor(ctx) {
@@ -17,6 +18,7 @@ export default class Game {
         this.player = new Player(this, 0, 0);
         this.inputHandler = new InputHandler();
         this.camera = new Camera();
+        this.progressBar = new ProgressBar();
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
     }
@@ -25,13 +27,18 @@ export default class Game {
      */
     start() {
         return __awaiter(this, void 0, void 0, function* () {
+            // the number of stuff to be loaded
+            // in this case we have 2 (the world, and the player)
             yield this.world.init(); // loading world
+            this.progressBar.addProgress(100);
+            this.progressBar.render(this.ctx);
             yield this.player.init();
+            this.progressBar.addProgress(100);
             this.camera.follow(this.player);
             this.run();
         });
     }
-    // game loop function with delta time
+    // game loop
     run() {
         this.update();
         this.render(this.ctx);

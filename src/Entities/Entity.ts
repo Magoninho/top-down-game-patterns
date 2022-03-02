@@ -1,17 +1,21 @@
 import Game from "../Game";
+import World from "../World";
 
 export default class Entity {
     // protected because we want the child classes to have access
     protected game: Game; // the game the entity is on
+    protected world: World; // the world the entity is on
 	protected x: number;
 	protected y: number;
 	protected width: number;
 	protected height: number;
 	protected spritesheet: HTMLImageElement;
 
-	constructor(x: number, y: number) {
+	constructor(game: Game, x: number, y: number) {
 		this.x = x;
 		this.y = y;
+        this.game = game;
+        this.world = this.game.world;
 	}
 
     // Initializes assets for specific child classes

@@ -42,11 +42,11 @@ export default class World {
 
 		// This will make sure that what is being rendered is inside of the camera
 		// Understand is like a render distance
-		let startCol = Math.floor(Camera.x / (World.TILESIZE*World.SCALE));
-		let startRow = Math.floor(Camera.y / (World.TILESIZE*World.SCALE));
+		let startCol = this.getCol(Camera.x);
+		let startRow = this.getRow(Camera.y);
 
-		let endCol = startCol + Math.floor(Camera.width / (World.TILESIZE*World.SCALE));
-		let endRow = startRow + Math.floor(Camera.height / (World.TILESIZE*World.SCALE));
+		let endCol = startCol + this.getCol(Camera.width);
+		let endRow = startRow + this.getRow(Camera.height);
 
 		for (let i = startRow; i <= endRow; i++) {
 			for (let j = startCol; j <= endCol; j++) {
@@ -59,6 +59,7 @@ export default class World {
 		}
 	}
 
+	// checks if on a position, in pixels, there is a solid tile (all tiles different from -1 in the solid layer)
 	public isSolidTileAt(x: number, y: number): boolean {
 		let solidLayer = 4; // the solid layer from this.layers
 
@@ -68,6 +69,7 @@ export default class World {
 		return this.getTileID(solidLayer, col, row) != -1;
 	}
 
+	// checks if on a position, in pixels, there is a liquid tile (e.g. water)
 	public isLiquidAt(x: number, y: number) {
 		let waterLevel = 1;
 		let col = this.getCol(x);
@@ -80,6 +82,7 @@ export default class World {
 		return this.layers[layer][x + (y * World.WORLD_WIDTH_IN_TILES)] - 1; // -1 because the results of the Tiled software do not include 0 as the first index
 	}
 
+	// getRow and getCol functions converts position in pixels to position in tiles
 	public getCol(x: number): number {
 		return Math.floor(x / (World.TILESIZE * World.SCALE));
 	}

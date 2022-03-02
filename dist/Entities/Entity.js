@@ -8,9 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export default class Entity {
-    constructor(x, y) {
+    constructor(game, x, y) {
         this.x = x;
         this.y = y;
+        this.game = game;
+        this.world = this.game.world;
     }
     // Initializes assets for specific child classes
     init() {

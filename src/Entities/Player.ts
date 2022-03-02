@@ -7,42 +7,47 @@ import Entity from "./Entity.js";
 
 export default class Player extends Entity {
 
+	// player's sprite width and height
 	protected width: number = 16;
 	protected height: number = 18;
 
+	// player's speed, depends on the world scale
+	// for example, if the scale is 2, the speed must be twice as fast to compensate
 	private static speed: number = 1.4 * World.SCALE;
+	
+	// player's directions
 	private dx: number = 0;
 	private dy: number = 0;
 
 	// animation variables
+	// the current frame
 	private frame: number = 0;
+	// the animation row in the player's spritesheet (0: down; 1: up; 2: left; 3: right)
 	private row: number = 0;
 
 	constructor(game: Game, x: number, y: number) {
-		super(x, y);
-
-		this.game = game;
-
+		super(game, x, y);
 	}
 
 	public async init(): Promise<void> {
 		this.spritesheet = await ImageUtils.loadImageFromUrl("assets/gfx/Entity/player.png");
-		// positioning the player to be right on the door
+		// positioning the player in some nice place
 		this.x = World.WORLD_WIDTH / 4;
 		this.y = World.WORLD_HEIGHT - 500;
-		// this.x = 0;
 	}
 
 	public collide(dirx, diry) {
 
+		// the acceleration in both axis
 		let xa = dirx * Player.speed;
 		let ya = diry * Player.speed;
 
+
+		// Collision box setup
+		// we are not going to make the entire player be collidable, just a piece of it
 		let offsetx = 4 * World.SCALE;
 		let offsety = 9 * World.SCALE;
 
-		// TODO: make use of the Rectangle object!
-		// Collision box
 		let box_x = this.x + offsetx;
 		let box_y = this.y + offsety;
 		let box_width = this.width / 2;
@@ -52,7 +57,7 @@ export default class Player extends Entity {
 		let nextX = box_x + xa;
 		let nextY = box_y + ya;
 
-		// Now checking if there is collision in the next position in all corners of the square
+		// Now checking if there are collisions in the next position in all corners of the square
 		// Top left
 		let topLeftX: number = nextX;
 		let topLeftY: number = nextY;
@@ -69,10 +74,11 @@ export default class Player extends Entity {
 		let bottomRightX: number = (nextX + box_width * World.SCALE);
 		let bottomRightY: number = (nextY + box_height * World.SCALE);
 
-		let collision: boolean = this.game.world.isSolidTileAt(topLeftX, topLeftY) ||
-			this.game.world.isSolidTileAt(topRightX, topRightY) ||
-			this.game.world.isSolidTileAt(bottomLeftX, bottomLeftY) ||
-			this.game.world.isSolidTileAt(bottomRightX, bottomRightY);
+		// checking collisions in all the 4 corners of the player's collision box
+		let collision: boolean = this.world.isSolidTileAt(topLeftX, topLeftY) ||
+			this.world.isSolidTileAt(topRightX, topRightY) ||
+			this.world.isSolidTileAt(bottomLeftX, bottomLeftY) ||
+			this.world.isSolidTileAt(bottomRightX, bottomRightY);
 		return collision;
 	}
 
@@ -95,7 +101,7 @@ export default class Player extends Entity {
 
 
 		// adding the velocity vector to player's position
-		// TODO: comment
+		// to avoid sticking in walls, we check collisions in axis separately
 		if (!this.collide(dirx, 0))
 			this.x += vx;
 		if (!this.collide(0, diry))
@@ -118,6 +124,7 @@ export default class Player extends Entity {
 	}
 
 	public update() {
+		// storing the player's old position (before moving)
 		let playerOldX = this.x;
 		let playerOldY = this.y;
 
@@ -126,7 +133,7 @@ export default class Player extends Entity {
 		this.dy = 0;
 
 		// changing directions and changing row animation
-		// see "assets/gfx/Entity/player.png"
+		// "assets/gfx/Entity/player.png" to see rows
 		if (this.game.inputHandler.isDown(37)) { // left
 			this.dx = -1;
 
@@ -151,11 +158,12 @@ export default class Player extends Entity {
 		this.move(this.dx, this.dy);
 
 
-
+		// storing player's new position (after moving)
 		let playerNewX = this.x;
 		let playerNewY = this.y;
 
-		// Checking if the player stoped by comparing its previous position with its moved one
+		// Checking if the player stoped by checking if the difference from its new and old position is 0
+		// which means there was no movement
 		if (playerNewY - playerOldY == 0 && playerNewX - playerOldX == 0) {
 			this.frame = 0; // sets the frame to the first of the selected row animation
 		}
@@ -164,6 +172,7 @@ export default class Player extends Entity {
 	public render(ctx: CanvasRenderingContext2D) {
 		// Flooring the frame counter to turn it into an index
 		let flooredFrame = Math.floor(this.frame);
+		// if player is swimming, then draw it with a cropped height
 		if (this.isSwimming()) {
 			ctx.drawImage(
 				this.spritesheet,
@@ -178,6 +187,7 @@ export default class Player extends Entity {
 				this.height * World.SCALE - 12
 			);
 		} else {
+			// else, draw it normally
 			ctx.drawImage(
 				this.spritesheet,
 				flooredFrame * this.width,

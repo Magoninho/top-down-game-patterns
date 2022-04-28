@@ -4,11 +4,12 @@
  <terraintypes>
   <terrain name="water" tile="324"/>
  </terraintypes>
+ <tile id="0" type="grass"/>
  <tile id="242" terrain=",,,0"/>
  <tile id="243" terrain=",,0,0"/>
  <tile id="244" terrain=",,0,"/>
  <tile id="282" terrain=",0,,0"/>
- <tile id="283" terrain="0,0,0,0"/>
+ <tile id="283" type="water" terrain="0,0,0,0"/>
  <tile id="284" terrain="0,,0,"/>
  <tile id="322" terrain=",0,,"/>
  <tile id="323" terrain="0,0,,"/>
